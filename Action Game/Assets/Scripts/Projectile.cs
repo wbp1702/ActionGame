@@ -10,8 +10,8 @@ public class Projectile : MonoBehaviour
     {
         if (other.gameObject == Level.Instance.gameObject) return;
 
-        Enemy enemy = other.GetComponent<Enemy>();
-        if (enemy != null )
+        Enemy enemy = other.GetComponentInParent<Enemy>();
+        if (enemy != null)
         {
             enemy.health = Mathf.Max(enemy.health - damage, 0);
         }

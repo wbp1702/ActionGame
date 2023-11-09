@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
+    [Header("Inscribed")]
     public GameObject projectilePrefab;
     public float projectileSpeed = 5.0f;
     public float movementSpeed = 2.0f;
@@ -13,10 +16,16 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        if (Instance != null)
+        {
+            Debug.LogError("Multiple Instances of Player");
+            Destroy(gameObject);
+        }
+
+        Instance = this;
         controller = GetComponent<CharacterController>();
     }
 
-    // Start is called before the first frame update
     void Update()
     {
         Vector3 lookDirection;
@@ -49,4 +58,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Teleport(Vector3 position)
+    {
+        controller.enabled = false;
+        transform.position = position;
+        controller.enabled = true;
+    }
 }

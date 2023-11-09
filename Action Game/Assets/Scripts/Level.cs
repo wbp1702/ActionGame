@@ -7,11 +7,15 @@ public class Level : MonoBehaviour
 {
     public static Level Instance { get; private set; }
 
+    [Header("Inscribed")]
+    [SerializeField]
+    Vector3 playerSpawnPosition = Vector3.zero;
+
     void Start()
     {
         if (Instance != null)
         {
-            Debug.LogError("Multiple Level Instances");
+            Debug.LogError("Multiple Instances of Level");
             Destroy(gameObject);
         }
 
@@ -26,6 +30,14 @@ public class Level : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Destroy(other.gameObject);
+        if (other.TryGetComponent<Player>(out Player player))
+        {
+            // If the player is out of bounds teleport them back to the start.
+            player.Teleport(playerSpawnPosition);
+        }
+        else
+        {
+            Destroy(other.gameObject);
+        }
     }
 }
