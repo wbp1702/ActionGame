@@ -24,34 +24,39 @@ public class Weapon : MonoBehaviour
     [Header("Dynamic")]
     [SerializeField]
     private bool triggerHeld = false;
-
+    [SerializeField]
     private float delayTime;
+    [SerializeField]
     private int burstIndex;
+    [SerializeField]
+    private int remainingRounds;
     
     void Start()
     {
-        
+        remainingRounds = magazineSize;
     }
+
+    void OnEnable()
+	{
+        if (remainingRounds == 0) delayTime = reloadTime;
+	}
 
     // Update is called once per frame
     void Update()
     {
         delayTime = Mathf.Max(delayTime - Time.deltaTime, 0);
 
-        if (burstIndex > 0 && delayTime <= 0f)
+        if (remainingRounds == 0)
+		{
+            if (delayTime <= 0f) remainingRounds = magazineSize;
+		}
+        else if (burstIndex > 0 && delayTime <= 0f)
         {
             Fire();
-
-            burstIndex--;
-            if (burstIndex > 0) delayTime += burstDelay;
-            else delayTime += 1f / rateOfFire;
         }
         else if (hasAutomatic && triggerHeld && delayTime <= 0f)
         {
             Fire();
-
-
-            delayTime += 1f / rateOfFire;
         }
     }
 
@@ -59,26 +64,37 @@ public class Weapon : MonoBehaviour
     {
         triggerHeld = trigger;
 
-        if (trigger && delayTime <= 0f)
+        if (trigger && remainingRounds > 0 && burstIndex == 0 && delayTime <= 0f)
         {
+            burstIndex = burstCount;
             Fire();
-            
-            if (burstCount > 1)
-            {
-                burstIndex = burstCount - 1;
-                delayTime += burstDelay;
-            }
-            else delayTime += 1f / rateOfFire;
         }
     }
 
     private void Fire()
     {
-        GameObject projectile = Instantiate(projectilePrefab);
+        remainingRounds--;
+        GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         Rigidbody rigidbody = projectile.GetComponent<Rigidbody>();
-        projectile.transform.position = transform.position;
-        Quaternion spreadRotation = Quaternion.Euler(0, Random.Range(0, spreadAngle), 0);
-        rigidbody.velocity = spreadRotation * transform.forward * exitVelocity;
+        
+        Quaternion spreadRotation = Quaternion.AngleAxis(Random.Range(0, spreadAngle), Vector3.up);
+        rigidbody.velocity = spreadRotation * (transform.forward * exitVelocity);
         rigidbody.excludeLayers = LayerMask.GetMask("Player");
+
+        SphereCollider collider = projectile.GetComponent<SphereCollider>();
+        collider.excludeLayers = LayerMask.GetMask("Player");
+
+        if (remainingRounds == 0)
+        {
+            delayTime += reloadTime;
+            burstIndex = 0;
+            return;
+        }
+
+        burstIndex--;
+        if (burstIndex > 0) delayTime += burstDelay;
+        else delayTime += 1f / rateOfFire;
+
+        //Debug.Break();
     }
 }

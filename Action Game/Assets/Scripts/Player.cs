@@ -8,8 +8,7 @@ public class Player : MonoBehaviour
     public static Player Instance { get; private set; }
 
     [Header("Inscribed")]
-    public GameObject projectilePrefab;
-    public float projectileSpeed = 5.0f;
+    public Weapon weapon;
     public float movementSpeed = 2.0f;
 
     private CharacterController controller;
@@ -50,12 +49,17 @@ public class Player : MonoBehaviour
         // Projectile
         if (Input.GetMouseButtonDown(0))
         {
-            GameObject projectile = Instantiate(projectilePrefab);
-            Rigidbody rigidbody = projectile.GetComponent<Rigidbody>();
-            projectile.transform.position = transform.position;
-            rigidbody.velocity = lookDirection * projectileSpeed;
-            rigidbody.excludeLayers = LayerMask.GetMask("Player");
+            //GameObject projectile = Instantiate(projectilePrefab);
+            //Rigidbody rigidbody = projectile.GetComponent<Rigidbody>();
+            //projectile.transform.position = transform.position;
+            //rigidbody.velocity = lookDirection * projectileSpeed;
+            //rigidbody.excludeLayers = LayerMask.GetMask("Player");
+            weapon.SetTrigger(true);
         }
+        if (Input.GetMouseButtonUp(0))
+		{
+            weapon.SetTrigger(false);
+		}
     }
 
     public void Teleport(Vector3 position)
