@@ -77,7 +77,7 @@ public class Weapon : MonoBehaviour
         GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         Rigidbody rigidbody = projectile.GetComponent<Rigidbody>();
         
-        Quaternion spreadRotation = Quaternion.AngleAxis(Random.Range(0, spreadAngle), Vector3.up);
+        Quaternion spreadRotation = Quaternion.AngleAxis(Random.Range(0, spreadAngle) - spreadAngle / 2, Vector3.up);
         rigidbody.velocity = spreadRotation * (transform.forward * exitVelocity);
         rigidbody.excludeLayers = LayerMask.GetMask("Player");
 
