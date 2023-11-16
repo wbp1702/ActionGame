@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public float movementSpeed = 2.0f;
     public int health;
 
-    private CharacterController controller;
+    public CharacterController controller;
 
     private void Start()
     {
