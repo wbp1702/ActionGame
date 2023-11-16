@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     [Header("Inscribed")]
     public Weapon weapon;
     public float movementSpeed = 2.0f;
+    public int health;
 
     private CharacterController controller;
 

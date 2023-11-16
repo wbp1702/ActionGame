@@ -11,7 +11,7 @@ public class Weapon : MonoBehaviour
     public float reloadTime = 1.0f;
     public int magazineSize = 10;
 
-    public int burstCount = 1;
+    public int roundsPerBurst = 1;
     public float burstDelay = 0.1f;
     
     public bool hasAutomatic = false;
@@ -31,33 +31,18 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     private int remainingRounds;
     
-    void Start()
+    void Awake()
     {
         remainingRounds = magazineSize;
     }
 
-    void OnEnable()
-	{
-        if (remainingRounds == 0) delayTime = reloadTime;
-	}
-
-    // Update is called once per frame
     void Update()
     {
         delayTime = Mathf.Max(delayTime - Time.deltaTime, 0);
 
-        if (remainingRounds == 0)
-		{
-            if (delayTime <= 0f) remainingRounds = magazineSize;
-		}
-        else if (burstIndex > 0 && delayTime <= 0f)
-        {
-            Fire();
-        }
-        else if (hasAutomatic && triggerHeld && delayTime <= 0f)
-        {
-            Fire();
-        }
+        if (remainingRounds == 0 && delayTime <= 0f) remainingRounds = magazineSize;
+		
+        if (remainingRounds != 0 && ((hasAutomatic && triggerHeld) || burstIndex > 0) && delayTime <= 0f) Fire();
     }
 
     public void SetTrigger(bool trigger)
@@ -66,7 +51,7 @@ public class Weapon : MonoBehaviour
 
         if (trigger && remainingRounds > 0 && burstIndex == 0 && delayTime <= 0f)
         {
-            burstIndex = burstCount;
+            burstIndex = roundsPerBurst;
             Fire();
         }
     }

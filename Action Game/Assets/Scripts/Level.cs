@@ -22,12 +22,6 @@ public class Level : MonoBehaviour
         Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerExit(Collider other)
     {
         if (other.TryGetComponent<Player>(out Player player))
