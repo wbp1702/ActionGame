@@ -167,4 +167,4 @@ MonoBehaviour:
   health: 0
   minInitialVelocity: 0
   maxInitialVelocity: 0
-  initialHealth: 100
+  initialHealth: 50

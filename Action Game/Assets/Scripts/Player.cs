@@ -33,6 +33,7 @@ public class Player : Entity
         Instance = this;
         rigidbody = GetComponent<Rigidbody>();
         health = maxHealth = initialHealth;
+        primaryWeapon.parent = secondaryWeapon.parent = this;
     }
 
     void Update()

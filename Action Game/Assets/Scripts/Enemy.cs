@@ -27,6 +27,7 @@ public class Enemy : Entity
     {
         agent = GetComponent<NavMeshAgent>();
         health = maxHealth = initialHealth;
+        weapon.parent = this;
     }
 
     // Update is called once per frame
