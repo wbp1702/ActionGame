@@ -2,36 +2,68 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(MeshCollider))]
 public class Level : MonoBehaviour
 {
-    public static Level Instance { get; private set; }
+	[System.Serializable]
+	public class EnemySpawn
+	{
+		public GameObject enemyPrefab;
+		public int minimumSpawnCount = 1;
+		public int maximumSpawnCount = 10;
+	}
 
-    [Header("Inscribed")]
-    [SerializeField]
-    Vector3 playerSpawnPosition = Vector3.zero;
+	public static Level Instance { get; private set; }
 
-    void Start()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("Multiple Instances of Level");
-            Destroy(gameObject);
-        }
+	[Header("Level Generation")]
+	public float maximumSpawnRadius = 1f;
 
-        Instance = this;
-    }
+	public EnemySpawn[] enemySpawns;
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent<Player>(out Player player))
-        {
-            // If the player is out of bounds teleport them back to the start.
-            player.Teleport(playerSpawnPosition);
-        }
-        else
-        {
-            Destroy(other.gameObject);
-        }
-    }
+	public GameObject[] asteroidPrefabs;
+    public int minimumAsteroidCount = 10;
+    public int maximumAsteroidCount = 20;
+
+	public GameObject minePrefab;
+	public int minimumMineCount = 5;
+	public int maximumMineCount = 10;
+	
+	void Start()
+	{
+		if (Instance != null)
+		{
+			Debug.LogError("Multiple Instances of Level");
+			Destroy(gameObject);
+		}
+
+		Instance = this;
+
+		// Level Generation
+		foreach (EnemySpawn spawn in enemySpawns)
+		{
+			int enemyCount = Random.Range(spawn.minimumSpawnCount, spawn.maximumSpawnCount);
+			for (int j = 0; j < enemyCount; j++)
+			{
+				Vector3 position = Random.insideUnitSphere * Random.Range(0f, maximumSpawnRadius);
+				position.y = 0;
+				Instantiate<GameObject>(spawn.enemyPrefab, position, Quaternion.identity);
+			}
+		}
+
+		int asteroidCount = Random.Range(minimumAsteroidCount, maximumAsteroidCount);
+		for (int i = 0; i < asteroidCount; i++)
+		{
+			Vector3 position = Random.insideUnitSphere * Random.Range(0f, maximumSpawnRadius);
+			position.y = 0;
+			Instantiate<GameObject>(asteroidPrefabs[Random.Range(0, asteroidPrefabs.Length)], position, Quaternion.identity);
+		}
+
+		int mineCount = Random.Range(minimumMineCount, maximumMineCount);
+		for (int i = 0; i < mineCount; i++)
+		{
+			Vector3 position = Random.insideUnitSphere * Random.Range(0f, maximumSpawnRadius);
+			position.y = 0;
+			Instantiate<GameObject>(minePrefab, position, Quaternion.identity);
+		}
+	}
 }

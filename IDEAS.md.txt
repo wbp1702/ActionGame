@@ -3,3 +3,4 @@ Levels move up the space station
 Random asteriods contain weapons
 shooting asteroids move them
 asteriods take damage from projectiles
+mines that move towards player

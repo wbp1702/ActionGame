@@ -3,18 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Entity
 {
     public static Player Instance { get; private set; }
 
     [Header("Inscribed")]
-    public Weapon weapon;
-    public float movementSpeed = 2.0f;
-    public int health;
+    public Weapon primaryWeapon;
+    public Weapon secondaryWeapon;
+    public int initialHealth = 100;
+    public float strafeSpeed = 10f;
+    public float boostSpeed = 20f;
+    public float strafeRotationFactor = 0.5f;
+    public float boostRotationFactor = 0.1f;
+    public KeyCode boostKey = KeyCode.LeftShift;
+    //public int health;
 
-    public CharacterController controller;
+    public Rigidbody rigidbody;
+    private Vector3 wasd_input;
+    private bool boostActive;
 
-    private void Start()
+    private void Awake()
     {
         if (Instance != null)
         {
@@ -23,50 +31,43 @@ public class Player : MonoBehaviour
         }
 
         Instance = this;
-        controller = GetComponent<CharacterController>();
+        rigidbody = GetComponent<Rigidbody>();
+        health = maxHealth = initialHealth;
     }
 
     void Update()
     {
-        Vector3 lookDirection;
+        Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        target.y = transform.position.y;
 
-        {   // Mouse Aiming
-            Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            target.y = transform.position.y;
+        Quaternion targetRotation = Quaternion.LookRotation(target - transform.position, Vector3.up);
 
-            lookDirection = (target - transform.position).normalized;
-            transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-        }
-
-        {   // Movement
-            Vector3 moveDirection = Vector3.zero;
-            if (Input.GetKey(KeyCode.W)) moveDirection.z += 1f;
-            if (Input.GetKey(KeyCode.A)) moveDirection.x -= 1f;
-            if (Input.GetKey(KeyCode.S)) moveDirection.z -= 1f;
-            if (Input.GetKey(KeyCode.D)) moveDirection.x += 1f;
-            controller.Move(moveDirection.normalized * movementSpeed * Time.deltaTime);
-        }
+        boostActive = Input.GetKey(boostKey);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, boostActive ? boostRotationFactor : strafeRotationFactor);
+        wasd_input = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
         // Projectile
-        if (Input.GetMouseButtonDown(0))
-        {
-            //GameObject projectile = Instantiate(projectilePrefab);
-            //Rigidbody rigidbody = projectile.GetComponent<Rigidbody>();
-            //projectile.transform.position = transform.position;
-            //rigidbody.velocity = lookDirection * projectileSpeed;
-            //rigidbody.excludeLayers = LayerMask.GetMask("Player");
-            weapon.SetTrigger(true);
-        }
-        if (Input.GetMouseButtonUp(0))
-		{
-            weapon.SetTrigger(false);
-		}
+        if (Input.GetMouseButtonDown(0)) primaryWeapon.SetTrigger(true);
+        else if (Input.GetMouseButtonUp(0)) primaryWeapon.SetTrigger(false);
+
+        if (Input.GetMouseButtonDown(1)) secondaryWeapon.SetTrigger(true);
+        else if (Input.GetMouseButtonUp(1)) secondaryWeapon.SetTrigger(false);
     }
 
-    public void Teleport(Vector3 position)
-    {
-        controller.enabled = false;
-        transform.position = position;
-        controller.enabled = true;
-    }
+	private void FixedUpdate()
+	{
+        if (boostActive)
+		{
+            rigidbody.velocity = transform.forward * Mathf.Lerp(rigidbody.velocity.magnitude, boostSpeed, 0.5f);
+        }
+        else
+		{
+            rigidbody.velocity = wasd_input.normalized * Mathf.Lerp(rigidbody.velocity.magnitude, strafeSpeed, 0.9f);
+        }
+	}
+
+	public override float GetSpeed()
+	{
+        return rigidbody.velocity.magnitude;
+	}
 }

@@ -20,24 +20,14 @@ public class Projectile : MonoBehaviour
         velocity = rigidbody.velocity;
 	}
 
-	private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.gameObject == Level.Instance.gameObject) return;
+        Entity entity = collision.gameObject.GetComponentInParent<Entity>();
+        if (entity != null)
+		{
+            entity.Damage(damage);
+		}
 
-        if (other.gameObject == Player.Instance.gameObject)
-        {
-            Player.Instance.health = Mathf.Max(Player.Instance.health - damage, 0);
-            Destroy(gameObject);
-            return;
-        }
-
-        Enemy enemy = other.GetComponentInParent<Enemy>();
-        if (enemy != null)
-        {
-            enemy.health = Mathf.Max(enemy.health - damage, 0);
-            Destroy(gameObject);
-            return;
-        }
-
+        Destroy(gameObject);
     }
 }

@@ -19,6 +19,8 @@ public class Weapon : MonoBehaviour
     public float exitVelocity = 10.0f;
     public GameObject projectilePrefab;
 
+    public Entity parent;
+
     // Kickback
 
     [Header("Dynamic")]
@@ -63,11 +65,11 @@ public class Weapon : MonoBehaviour
         Rigidbody rigidbody = projectile.GetComponent<Rigidbody>();
         
         Quaternion spreadRotation = Quaternion.AngleAxis(Random.Range(0, spreadAngle) - spreadAngle / 2, Vector3.up);
-        rigidbody.velocity = spreadRotation * (transform.forward * exitVelocity);
-        rigidbody.excludeLayers = LayerMask.GetMask("Player");
+        rigidbody.velocity = (spreadRotation * transform.forward) * (exitVelocity + parent.GetSpeed());
+        rigidbody.excludeLayers = (1 << parent.gameObject.layer);
 
         SphereCollider collider = projectile.GetComponent<SphereCollider>();
-        collider.excludeLayers = LayerMask.GetMask("Player");
+        collider.excludeLayers = (1 << parent.gameObject.layer);
 
         if (remainingRounds == 0)
         {
