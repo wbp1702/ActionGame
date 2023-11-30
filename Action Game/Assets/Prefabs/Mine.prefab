@@ -137,6 +137,6 @@ MonoBehaviour:
   effectedLayers:
     serializedVersion: 2
     m_Bits: 704
-  damage: 100
-  blastRadius: 10
+  maxDamage: 100
+  damageRadius: 5
   initialHealth: 10

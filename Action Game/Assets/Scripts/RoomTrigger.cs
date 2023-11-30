@@ -12,7 +12,7 @@ public class RoomTrigger : MonoBehaviour
         {
             foreach (Enemy enemy in enemies)
             {
-                enemy.state = Enemy.State.Attacking;
+                if (enemy) enemy.state = Enemy.State.Attacking;
             }
         }
     }

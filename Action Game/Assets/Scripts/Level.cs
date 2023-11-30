@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(MeshCollider))]
 public class Level : MonoBehaviour
@@ -27,6 +28,9 @@ public class Level : MonoBehaviour
 	public GameObject minePrefab;
 	public int minimumMineCount = 5;
 	public int maximumMineCount = 10;
+
+	[Header("UI")]
+	public GameObject gameOverPanel;
 	
 	void Start()
 	{
@@ -65,5 +69,18 @@ public class Level : MonoBehaviour
 			position.y = 0;
 			Instantiate<GameObject>(minePrefab, position, Quaternion.identity);
 		}
+		
+		Time.timeScale = 1;
+    }
+
+    public void PlayerDeath()
+	{
+		Time.timeScale = 0;
+		gameOverPanel.SetActive(true);
+	}
+
+	public void RestartLevel()
+	{
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
 }

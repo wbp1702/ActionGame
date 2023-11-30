@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : Entity
 {
@@ -14,7 +13,8 @@ public class Enemy : Entity
 
     [Header("Inscribed")]
     public int initialHealth = 100;
-    public float minimalDistance = 5;
+    public float attackDistance = 10f;
+    public float separationDistance = 5;
 
     [Header("Dynamic")]
     public State state = State.Idle;
@@ -22,7 +22,6 @@ public class Enemy : Entity
     private NavMeshAgent agent;
     private float lastRandom;
 
-    // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -30,7 +29,6 @@ public class Enemy : Entity
         weapon.parent = this;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (health <= 0)
@@ -43,7 +41,7 @@ public class Enemy : Entity
 
         if (state == State.Idle)
 		{
-            if (Vector3.Distance(target, transform.position) < 10 && Vector3.Angle(target - transform.position, transform.forward) <= 90)
+            if (Vector3.Distance(target, transform.position) <= attackDistance && Vector3.Angle(target - transform.position, transform.forward) <= 90)
 			{
                 Ray ray = new Ray(transform.position, target - transform.position);
                 Physics.Raycast(ray, out RaycastHit hit, float.PositiveInfinity, LayerMask.GetMask("Player", "Asteroids"));
@@ -52,12 +50,12 @@ public class Enemy : Entity
         }
         if (state == State.Attacking)
 		{
-            Vector3 minimumDistanceOffset = (transform.position - target).normalized * minimalDistance;
+            Vector3 minimumDistanceOffset = (transform.position - target).normalized * separationDistance;
             agent.SetDestination(minimumDistanceOffset + target);
 
             target.y = transform.position.y;
-            //lastRandom = Random.Range(Mathf.Min(lastRandom - 0.1f, 0), Mathf.Max(lastRandom + 0.1f, 1));
-            target += Player.Instance.rigidbody.velocity * ((target - transform.position).magnitude / weapon.exitVelocity) /** lastRandom*/;
+            lastRandom = Random.Range(Mathf.Min(lastRandom - 0.1f, 0), Mathf.Max(lastRandom + 0.1f, 1));
+            target += Player.Instance.rigidbody.velocity * ((target - transform.position).magnitude / weapon.exitVelocity) * lastRandom;
             transform.LookAt(target, Vector3.up);
 		}
     }

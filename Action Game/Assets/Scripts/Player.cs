@@ -71,4 +71,11 @@ public class Player : Entity
 	{
         return rigidbody.velocity.magnitude;
 	}
+
+    public override void Damage(int amount)
+    {
+        base.Damage(amount);
+
+        if (health <= 0) Level.Instance.PlayerDeath();
+    }
 }
