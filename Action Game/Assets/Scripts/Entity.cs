@@ -19,7 +19,7 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void Heal(int amount)
 	{
-		health = Mathf.Max(maxHealth, health + amount);
+		health = Mathf.Min(maxHealth, health + amount);
 	}
 
 	private void OnCollisionEnter(Collision collision)

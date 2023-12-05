@@ -5,6 +5,7 @@ using UnityEngine;
 public class RoomTrigger : MonoBehaviour
 {
     public Enemy[] enemies;
+    public bool enemiesDead;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -19,12 +20,14 @@ public class RoomTrigger : MonoBehaviour
 
     private void Update()
     {
-        bool enemiesDead = true;
-        for (int i = 0; i < enemies.Length; i++) if (enemies[i] == null) { enemiesDead = false; break; }
-
-        if (enemiesDead)
+        if (enemiesDead == false)
         {
-            Player.Instance.Heal(100);
+            for (int i = 0; i < enemies.Length; i++) if (enemies[i] == null) { enemiesDead = false; break; }
+
+            if (enemiesDead)
+            {
+                Player.Instance.Heal(100);
+            }
         }
     }
 }
