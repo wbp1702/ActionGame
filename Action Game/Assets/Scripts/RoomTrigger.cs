@@ -4,48 +4,32 @@ using UnityEngine;
 
 public class RoomTrigger : MonoBehaviour
 {
-    public GameObject[] enemyPrefabs;
-    public GameObject[] spawnPoints;
+    public GameObject[] enemies;
+    public Transform nextRoom;
 
-    [SerializeField]
-    private List<Enemy> enemies = new List<Enemy>();
+    private bool enemiesDead;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            foreach (Enemy enemy in enemies)
-            {
-                if (enemy) enemy.state = Enemy.State.Attacking;
-            }
+            //foreach (Enemy enemy in enemies)
+            //{
+            //    if (enemy) enemy.state = Enemy.State.Attacking;
+            //}
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    private void Update()
     {
-        bool enemiesDead = true;
-        
-        for (int i = 0; i < enemies.Count; i++) if (enemies[i] != null) { enemiesDead = false; break; }
+        if (enemiesDead) return;
+
+        for (int i = 0; i < enemies.Length; i++) if (enemies[i] != null) { enemiesDead = false; break; }
 
         if (enemiesDead == true)
         {
-            enemies.Clear();
-
             Player.Instance.Heal(100);
-
-            int val = Random.Range(0, enemyPrefabs.Length);
-            if (val < enemyPrefabs.Length)
-            {
-                var enemy = Instantiate<GameObject>(enemyPrefabs[val]);
-                val = Random.Range(0, spawnPoints.Length);
-                enemy.transform.position = spawnPoints[val].transform.position;
-                var e = enemy.GetComponent<Enemy>();
-                e.state = Enemy.State.Attacking;
-                enemies.Add(e);
-
-            }
-            
-            enemiesDead = false;
+            Player.Instance.transform.position = nextRoom.position;
         }
     }
 
@@ -53,10 +37,10 @@ public class RoomTrigger : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            foreach (Enemy enemy in enemies)
-            {
-                if (enemy) enemy.state = Enemy.State.Idle;
-            }
+            //foreach (Enemy enemy in enemies)
+            //{
+            //    if (enemy) enemy.state = Enemy.State.Idle;
+            //}
         }
     }
 }
