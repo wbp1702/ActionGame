@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1069,6 +1069,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9476951ee0ae19f459c5e3ffd179609e, type: 3}
+--- !u!1 &841911246 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1311919832135432926, guid: 9476951ee0ae19f459c5e3ffd179609e, type: 3}
+  m_PrefabInstance: {fileID: 2087650448}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &861959975
 GameObject:
   m_ObjectHideFlags: 0
@@ -2118,6 +2123,10 @@ PrefabInstance:
       propertyPath: enemies.Array.data[0]
       value: 
       objectReference: {fileID: 8227121742823151133, guid: a33f298025822cb429d8a27653fbc710, type: 3}
+    - target: {fileID: 199790665818570625, guid: 9476951ee0ae19f459c5e3ffd179609e, type: 3}
+      propertyPath: spawnPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 841911246}
     - target: {fileID: 1311919832135432926, guid: 9476951ee0ae19f459c5e3ffd179609e, type: 3}
       propertyPath: m_Name
       value: Room Main (lvl1)
