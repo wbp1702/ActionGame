@@ -41,6 +41,7 @@ public class Enemy : Entity
 
         if (state == State.Idle)
 		{
+            agent.SetDestination(transform.position);
             if (Vector3.Distance(target, transform.position) <= attackDistance && Vector3.Angle(target - transform.position, transform.forward) <= 90)
 			{
                 Ray ray = new Ray(transform.position, target - transform.position);

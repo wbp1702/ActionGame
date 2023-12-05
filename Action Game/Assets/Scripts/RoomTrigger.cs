@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class RoomTrigger : MonoBehaviour
 {
-    public Enemy[] enemyPrefabs;
+    public GameObject[] enemyPrefabs;
     public GameObject[] spawnPoints;
-    public bool enemiesDead;
 
+    [SerializeField]
     private List<Enemy> enemies = new List<Enemy>();
 
     private void OnTriggerEnter(Collider other)
@@ -23,23 +23,39 @@ public class RoomTrigger : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (enemiesDead)
+        bool enemiesDead = true;
+        
+        for (int i = 0; i < enemies.Count; i++) if (enemies[i] != null) { enemiesDead = false; break; }
+
+        if (enemiesDead == true)
         {
-            var enemy = Instantiate<GameObject>(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)].gameObject);
-            enemy.transform.position = spawnPoints[Random.Range(0, enemyPrefabs.Length)].transform.position;
+            enemies.Clear();
+
+            Player.Instance.Heal(100);
+
+            int val = Random.Range(0, enemyPrefabs.Length);
+            if (val < enemyPrefabs.Length)
+            {
+                var enemy = Instantiate<GameObject>(enemyPrefabs[val]);
+                val = Random.Range(0, spawnPoints.Length);
+                enemy.transform.position = spawnPoints[val].transform.position;
+                var e = enemy.GetComponent<Enemy>();
+                e.state = Enemy.State.Attacking;
+                enemies.Add(e);
+
+            }
+            
             enemiesDead = false;
         }
     }
 
-    private void Update()
+    private void OnTriggerExit(Collider other)
     {
-        if (enemiesDead == false)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            for (int i = 0; i < enemies.Count; i++) if (enemies[i] == null) { enemiesDead = false; break; }
-
-            if (enemiesDead)
+            foreach (Enemy enemy in enemies)
             {
-                Player.Instance.Heal(100);
+                if (enemy) enemy.state = Enemy.State.Idle;
             }
         }
     }

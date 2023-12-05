@@ -1258,8 +1258,8 @@ Transform:
   m_GameObject: {fileID: 885660835}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -100, y: 2, z: 20}
-  m_LocalScale: {x: 3, y: 1, z: 3}
+  m_LocalPosition: {x: 46.9, y: 2, z: 20}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 28024634}
@@ -1644,6 +1644,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 199790665818570625, guid: 9476951ee0ae19f459c5e3ffd179609e, type: 3}
+      propertyPath: enemiesDead
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 199790665818570625, guid: 9476951ee0ae19f459c5e3ffd179609e, type: 3}
       propertyPath: spawnPoints.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -1658,7 +1662,7 @@ PrefabInstance:
     - target: {fileID: 199790665818570625, guid: 9476951ee0ae19f459c5e3ffd179609e, type: 3}
       propertyPath: enemyPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 8227121742823151133, guid: a33f298025822cb429d8a27653fbc710, type: 3}
+      objectReference: {fileID: 3146685786858375762, guid: a33f298025822cb429d8a27653fbc710, type: 3}
     - target: {fileID: 1311919832135432926, guid: 9476951ee0ae19f459c5e3ffd179609e, type: 3}
       propertyPath: m_Name
       value: Room Main
@@ -1920,15 +1924,15 @@ MonoBehaviour:
   maximumSpawnRadius: 100
   enemySpawns:
   - enemyPrefab: {fileID: 3146685786858375762, guid: a33f298025822cb429d8a27653fbc710, type: 3}
-    minimumSpawnCount: 1
-    maximumSpawnCount: 10
+    minimumSpawnCount: 0
+    maximumSpawnCount: 0
   asteroidPrefabs:
   - {fileID: 4512743518937974858, guid: e52b794560d88ca4aa4a9def066305a4, type: 3}
-  minimumAsteroidCount: 10
-  maximumAsteroidCount: 20
+  minimumAsteroidCount: 0
+  maximumAsteroidCount: 0
   minePrefab: {fileID: 4932478719018277539, guid: 104be3f360523ca48b594ba9807e4a9a, type: 3}
-  minimumMineCount: 5
-  maximumMineCount: 10
+  minimumMineCount: 0
+  maximumMineCount: 0
   gameOverPanel: {fileID: 1371944703}
 --- !u!33 &1742711039
 MeshFilter:
