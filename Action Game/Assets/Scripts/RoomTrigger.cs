@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class RoomTrigger : MonoBehaviour
 {
-    public Enemy[] enemies;
+    public Enemy[] enemyPrefabs;
+    public GameObject[] spawnPoints;
     public bool enemiesDead;
+
+    private List<Enemy> enemies = new List<Enemy>();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -18,11 +21,21 @@ public class RoomTrigger : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (enemiesDead)
+        {
+            var enemy = Instantiate<GameObject>(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)].gameObject);
+            enemy.transform.position = spawnPoints[Random.Range(0, enemyPrefabs.Length)].transform.position;
+            enemiesDead = false;
+        }
+    }
+
     private void Update()
     {
         if (enemiesDead == false)
         {
-            for (int i = 0; i < enemies.Length; i++) if (enemies[i] == null) { enemiesDead = false; break; }
+            for (int i = 0; i < enemies.Count; i++) if (enemies[i] == null) { enemiesDead = false; break; }
 
             if (enemiesDead)
             {
