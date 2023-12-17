@@ -193,10 +193,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Use W,A,S,D to move your ship. You can move your gun and camera with your
-    mouse, shoot with left click. You can also boost using shift. To win the game
-    complete all the levels and beat the final boss. Watch out for the mines along
-    your way though and shoot the white diamonds for a health boost if your low.
+  m_Text: 'Use W,A,S,D to move your ship. You can move your gun and camera with your
+    mouse, shoot with left/right click.You can regain health by destroying enemy
+    ships and boost using shift. Survive as long as you can and watch out for the
+    mines along your way. '
 --- !u!222 &166415897
 CanvasRenderer:
   m_ObjectHideFlags: 0
