@@ -16,10 +16,10 @@ public class Enemy : Entity
     public float attackDistance = 10f;
     public float separationDistance = 5;
     public int playerHealOnDeath = 10;
+    public Weapon weapon;
 
     [Header("Dynamic")]
     public State state = State.Attacking;
-    public Weapon weapon;
     private NavMeshAgent agent;
 
     void Start()
@@ -84,7 +84,7 @@ public class Enemy : Entity
 
         if (health <= 0)
         {
-            Level.Instance.EnemyDeath();
+            Level.Instance?.EnemyDeath();
             Player.Instance.Heal(playerHealOnDeath);
         }
 	}

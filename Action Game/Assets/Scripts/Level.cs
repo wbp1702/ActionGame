@@ -133,7 +133,6 @@ public class Level : MonoBehaviour
 			if (enemiesRemaining == 0)
 			{
 				SpawnEnemies();
-				//SceneManager.LoadScene(nextLevelName);
             }
         }
     }

@@ -67,7 +67,7 @@ public class Weapon : MonoBehaviour
         rigidbody.velocity = (spreadRotation * transform.forward) * (exitVelocity + parent.GetSpeed());
         rigidbody.excludeLayers = (1 << parent.gameObject.layer);
 
-        CapsuleCollider collider = projectile.GetComponent<CapsuleCollider>();
+        Collider collider = projectile.GetComponent<Collider>();
         collider.excludeLayers = (1 << parent.gameObject.layer);
 
         if (remainingRounds == 0)
