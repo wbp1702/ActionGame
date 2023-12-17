@@ -12,6 +12,7 @@ public class Mine : Entity
 	public int initialHealth = 10;
 
 	private Rigidbody rigidbody;
+	private bool detonating = false;
 
 	private void Awake()
 	{
@@ -23,11 +24,12 @@ public class Mine : Entity
 	{
 		base.Damage(amount);
 
-		if (health <= 0) Detonate();
+		if (health <= 0 && !detonating) Detonate();
 	}
 
 	private void Detonate()
 	{
+		detonating = true;
 		Instantiate<GameObject>(explosionPrefab, transform.position, Quaternion.identity);
 		
 		Collider[] colliders = Physics.OverlapSphere(transform.position, 10f, effectedLayers);

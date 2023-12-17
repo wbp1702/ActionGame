@@ -21,7 +21,6 @@ public class Weapon : MonoBehaviour
 
     public Entity parent;
 
-    // Kickback
 
     [Header("Dynamic")]
     [SerializeField]
@@ -68,7 +67,7 @@ public class Weapon : MonoBehaviour
         rigidbody.velocity = (spreadRotation * transform.forward) * (exitVelocity + parent.GetSpeed());
         rigidbody.excludeLayers = (1 << parent.gameObject.layer);
 
-        SphereCollider collider = projectile.GetComponent<SphereCollider>();
+        CapsuleCollider collider = projectile.GetComponent<CapsuleCollider>();
         collider.excludeLayers = (1 << parent.gameObject.layer);
 
         if (remainingRounds == 0)
@@ -81,7 +80,5 @@ public class Weapon : MonoBehaviour
         burstIndex--;
         if (burstIndex > 0) delayTime += burstDelay;
         else delayTime += 1f / rateOfFire;
-
-        //Debug.Break();
     }
 }

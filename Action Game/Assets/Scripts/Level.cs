@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -23,6 +24,8 @@ public class Level : MonoBehaviour
 
     public static Level Instance { get; private set; }
 
+	public string nextLevelName;
+
 	[Header("Level Generation")]
 	public float maximumSpawnRadius = 1f;
 
@@ -39,8 +42,13 @@ public class Level : MonoBehaviour
 
 	[Header("UI")]
 	public GameObject gameOverPanel;
+	public TMP_Text highScoreText;
+	public TMP_Text scoreText;
 
-	private int enemiesRemaining = 0;
+    private int enemiesRemaining = 0;
+
+	private int highScore;
+	private int score = 0;
 	
 	void Start()
 	{
@@ -53,31 +61,12 @@ public class Level : MonoBehaviour
 		Instance = this;
 
 		// Level Generation
-		foreach (Transform spawnPoint in spawnPoints)
-		{
-			SpawnGroup spawnGroup = spawnGroups[Random.Range(0, spawnGroups.Length)];
-
-			int spawnCount = 0;
-			while (spawnCount < spawnGroup.maximumSpawns)
-			{
-				Spawn spawn = spawnGroup.spawns[Random.Range(0, spawnGroup.spawns.Length)];
-
-				if (spawnCount < spawnGroup.minimumSpawns || Random.value <= spawn.spawnChance)
-				{
-					Vector3 positionOffset = Random.insideUnitSphere * Random.Range(0f, 25);
-                    positionOffset.y = 2;
-					Instantiate<GameObject>(spawn.enemyPrefab, spawnPoint.position + positionOffset, Quaternion.identity);
-					spawnCount++;
-					enemiesRemaining++;
-				}
-				else break;
-            }
-		}
+		SpawnEnemies();
 
 		int asteroidCount = Random.Range(minimumAsteroidCount, maximumAsteroidCount);
 		for (int i = 0; i < asteroidCount; i++)
 		{
-			Vector3 position = Random.insideUnitSphere * Random.Range(0f, maximumSpawnRadius);
+			Vector3 position = Random.onUnitSphere * Random.Range(20f, maximumSpawnRadius);
 			position.y = 2;
 			Instantiate<GameObject>(asteroidPrefabs[Random.Range(0, asteroidPrefabs.Length)], position, Quaternion.identity);
 		}
@@ -85,12 +74,44 @@ public class Level : MonoBehaviour
 		int mineCount = Random.Range(minimumMineCount, maximumMineCount);
 		for (int i = 0; i < mineCount; i++)
 		{
-			Vector3 position = Random.insideUnitSphere * Random.Range(0f, maximumSpawnRadius);
+			Vector3 position = Random.insideUnitSphere * Random.Range(20f, maximumSpawnRadius);
 			position.y = 2;
 			Instantiate<GameObject>(minePrefab, position, Quaternion.identity);
 		}
 		
 		Time.timeScale = 1;
+
+		highScore = PlayerPrefs.GetInt("HighScore", 0);
+    }
+
+	private void SpawnEnemies()
+	{
+        foreach (Transform spawnPoint in spawnPoints)
+        {
+            SpawnGroup spawnGroup = spawnGroups[Random.Range(0, spawnGroups.Length)];
+
+            int spawnCount = 0;
+            while (spawnCount < spawnGroup.maximumSpawns)
+            {
+                Spawn spawn = spawnGroup.spawns[Random.Range(0, spawnGroup.spawns.Length)];
+
+                if (spawnCount < spawnGroup.minimumSpawns || Random.value <= spawn.spawnChance)
+                {
+                    Vector3 positionOffset = Random.insideUnitSphere * Random.Range(0f, 25);
+                    positionOffset.y = 2;
+                    Instantiate<GameObject>(spawn.enemyPrefab, spawnPoint.position + positionOffset, Quaternion.identity);
+                    spawnCount++;
+                    enemiesRemaining++;
+                }
+                else break;
+            }
+        }
+    }
+
+    private void Update()
+    {
+		scoreText.text = $"Score: {score}";
+		highScoreText.text = $"High Score: {highScore}";
     }
 
     public void PlayerDeath()
@@ -105,20 +126,27 @@ public class Level : MonoBehaviour
 		if (!restaring)
 		{
 			enemiesRemaining--;
+			score += 100;
+			highScore = Mathf.Max(highScore, score);
+			PlayerPrefs.SetInt("HighScore", highScore);
+
 			if (enemiesRemaining == 0)
 			{
-				int nextScene = SceneManager.GetActiveScene().buildIndex;
-
-				//if (SceneManager.sceneCount < nextScene) SceneManager.LoadScene(0);
-				//SceneManager.LoadScene(nextScene + 1);
-				Debug.Break();
-			}
-		}
+				SpawnEnemies();
+				//SceneManager.LoadScene(nextLevelName);
+            }
+        }
     }
 
 	public void RestartLevel()
 	{
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		restaring = true;
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+	public void MainMenu()
+	{
+		SceneManager.LoadScene("Menu");
+
     }
 }

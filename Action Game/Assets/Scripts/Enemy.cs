@@ -15,15 +15,16 @@ public class Enemy : Entity
     public int initialHealth = 100;
     public float attackDistance = 10f;
     public float separationDistance = 5;
+    public int playerHealOnDeath = 10;
 
     [Header("Dynamic")]
-    public State state = State.Idle;
+    public State state = State.Attacking;
     public Weapon weapon;
     private NavMeshAgent agent;
-    private float lastRandom;
 
     void Start()
     {
+        state = State.Attacking;
         agent = GetComponent<NavMeshAgent>();
         health = maxHealth = initialHealth;
         weapon.parent = this;
@@ -53,11 +54,14 @@ public class Enemy : Entity
 		{
             Vector3 minimumDistanceOffset = (transform.position - target).normalized * separationDistance;
             agent.SetDestination(minimumDistanceOffset + target);
-
             target.y = transform.position.y;
-            lastRandom = Random.Range(Mathf.Min(lastRandom - 0.1f, 0), Mathf.Max(lastRandom + 0.1f, 1));
-            target += Player.Instance.rigidbody.velocity * ((target - transform.position).magnitude / weapon.exitVelocity) * lastRandom;
-            transform.LookAt(target, Vector3.up);
+
+            // Estimate Player Position when projectile would hit player
+            target += Player.Instance.rigidbody.velocity * ((target - transform.position).magnitude / weapon.exitVelocity);
+            
+            var targetRotation = Quaternion.LookRotation(target - transform.position, Vector3.up);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 0.1f);
+            
 		}
     }
 
@@ -72,16 +76,17 @@ public class Enemy : Entity
 		}
     }
 
-    private void OnDestroy()
-    {
-        Level.Instance.EnemyDeath();
-    }
-
     public override void Damage(int amount)
 	{
 		base.Damage(amount);
 
         if (state == State.Idle) state = State.Attacking;
+
+        if (health <= 0)
+        {
+            Level.Instance.EnemyDeath();
+            Player.Instance.Heal(playerHealOnDeath);
+        }
 	}
 
 	public override float GetSpeed()

@@ -17,6 +17,7 @@ public class Player : Entity
     public float strafeRotationFactor = 0.5f;
     public float boostRotationFactor = 0.1f;
     public KeyCode boostKey = KeyCode.LeftShift;
+    public GameObject pauseMenuPanel;
     public TMP_Text healthText;
     
     public Rigidbody rigidbody;
@@ -25,11 +26,11 @@ public class Player : Entity
 
     private void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("Multiple Instances of Player");
-            Destroy(gameObject);
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("Multiple Instances of Player");
+        //    Destroy(gameObject);
+        //}
 
         Instance = this;
         rigidbody = GetComponent<Rigidbody>();
@@ -54,6 +55,13 @@ public class Player : Entity
 
         if (Input.GetMouseButtonDown(1)) secondaryWeapon.SetTrigger(true);
         else if (Input.GetMouseButtonUp(1)) secondaryWeapon.SetTrigger(false);
+
+        // Toggle Pause Menu
+        if (Input.GetKeyDown(KeyCode.Escape) && !Level.Instance.gameOverPanel.activeSelf)
+        {
+            Time.timeScale = pauseMenuPanel.activeInHierarchy ? 1.0f : 0.0f;
+            pauseMenuPanel.SetActive(!pauseMenuPanel.activeInHierarchy);
+        }
 
         healthText.text = $"Health: {health}/{maxHealth}";
     }
