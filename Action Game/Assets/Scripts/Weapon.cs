@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Weapon : MonoBehaviour
 {
     [Header("Inscribed")]
@@ -31,10 +32,13 @@ public class Weapon : MonoBehaviour
     private int burstIndex;
     [SerializeField]
     private int remainingRounds;
+
+    private AudioSource audioSource;
     
     void Awake()
     {
         remainingRounds = magazineSize;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -69,6 +73,8 @@ public class Weapon : MonoBehaviour
 
         Collider collider = projectile.GetComponent<Collider>();
         collider.excludeLayers = (1 << parent.gameObject.layer);
+
+        audioSource.Play();
 
         if (remainingRounds == 0)
         {
