@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Player : Entity
@@ -16,8 +17,8 @@ public class Player : Entity
     public float strafeRotationFactor = 0.5f;
     public float boostRotationFactor = 0.1f;
     public KeyCode boostKey = KeyCode.LeftShift;
-    //public int health;
-
+    public TMP_Text healthText;
+    
     public Rigidbody rigidbody;
     private Vector3 wasd_input;
     private bool boostActive;
@@ -53,6 +54,8 @@ public class Player : Entity
 
         if (Input.GetMouseButtonDown(1)) secondaryWeapon.SetTrigger(true);
         else if (Input.GetMouseButtonUp(1)) secondaryWeapon.SetTrigger(false);
+
+        healthText.text = $"Health: {health}/{maxHealth}";
     }
 
 	private void FixedUpdate()

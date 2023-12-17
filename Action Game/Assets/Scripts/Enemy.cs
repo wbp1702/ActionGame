@@ -72,7 +72,12 @@ public class Enemy : Entity
 		}
     }
 
-	public override void Damage(int amount)
+    private void OnDestroy()
+    {
+        Level.Instance.EnemyDeath();
+    }
+
+    public override void Damage(int amount)
 	{
 		base.Damage(amount);
 
