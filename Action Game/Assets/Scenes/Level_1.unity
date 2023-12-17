@@ -1530,7 +1530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfd0d2b62b2ee5146acad434d3bf2026, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maximumSpawnRadius: 50
+  maximumSpawnRadius: 100
   spawnPoints:
   - {fileID: 805343655}
   spawnGroups:
@@ -1544,8 +1544,8 @@ MonoBehaviour:
   minimumAsteroidCount: 10
   maximumAsteroidCount: 50
   minePrefab: {fileID: 4932478719018277539, guid: 104be3f360523ca48b594ba9807e4a9a, type: 3}
-  minimumMineCount: 5
-  maximumMineCount: 20
+  minimumMineCount: 0
+  maximumMineCount: 0
   gameOverPanel: {fileID: 1371944703}
 --- !u!1 &1771010135
 GameObject:

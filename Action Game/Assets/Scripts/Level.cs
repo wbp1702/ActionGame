@@ -64,7 +64,7 @@ public class Level : MonoBehaviour
 
 				if (spawnCount < spawnGroup.minimumSpawns || Random.value <= spawn.spawnChance)
 				{
-					Vector3 positionOffset = Random.insideUnitSphere * Random.Range(0f, maximumSpawnRadius);
+					Vector3 positionOffset = Random.insideUnitSphere * Random.Range(0f, 25);
                     positionOffset.y = 2;
 					Instantiate<GameObject>(spawn.enemyPrefab, spawnPoint.position + positionOffset, Quaternion.identity);
 					spawnCount++;
